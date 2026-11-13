@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#f5efe5">
+  <title>Encarga tu pieza | Arca Ceramics</title><meta name="robots" content="noindex"><meta name="description" content="Diseña tu pieza de cerámica por encargo, mira un precio aproximado y envía el pedido a Arca por WhatsApp.">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="styles.css">
+  <style>
+    .encargo-layout { display: grid; grid-template-columns: 1.3fr .9fr; gap: clamp(28px, 5vw, 64px); align-items: start; padding: 56px 0 90px; }
+    .paso { border: 0; margin: 0 0 30px; padding: 0; }
+    .paso legend { margin-bottom: 12px; font-family: var(--serif); font-size: 22px; }
+    .paso legend b { color: var(--clay); font-family: var(--sans); font-size: 12px; margin-right: 8px; }
+    .paso small { display: block; margin: -6px 0 12px; color: var(--muted); font-size: 12px; }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .chip input { position: absolute; opacity: 0; }
+    .chip span { display: inline-flex; align-items: center; min-height: 44px; padding: 0 16px; border: 1px solid var(--line); border-radius: 999px; background: var(--white); font-size: 13px; cursor: pointer; }
+    .chip input:checked + span { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+    .chip input:focus-visible + span { outline: 2px solid var(--clay); outline-offset: 2px; }
+    .tamano-fila { display: flex; align-items: center; gap: 16px; }
+    .tamano-fila input { flex: 1; accent-color: var(--clay); min-height: 44px; }
+    .tamano-fila output { min-width: 64px; font-family: var(--serif); font-size: 24px; text-align: right; }
+    .check { display: flex; gap: 10px; align-items: flex-start; padding: 10px 0; font-size: 14px; cursor: pointer; }
+    .check input { width: 20px; height: 20px; margin: 0; accent-color: var(--clay); flex: none; }
+    .campos { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+    .presupuesto { position: sticky; top: 90px; padding: 28px; background: var(--ink); color: var(--paper); }
+    .presupuesto .eyebrow { color: #e9b9a6; }
+    .presupuesto .cifra { margin: 10px 0 4px; font-family: var(--serif); font-size: clamp(40px, 6vw, 56px); line-height: 1; }
+    .presupuesto p { margin: 0; color: rgba(245,239,229,.75); font-size: 13px; }
+    .presupuesto .aviso { margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,.18); font-size: 12px; }
+    .comparar-titulo { margin: 22px 0 8px; font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+    .comparar-op { display: flex; justify-content: space-between; width: 100%; min-height: 44px; padding: 0 14px; margin-bottom: 6px; border: 1px solid rgba(255,255,255,.2); background: transparent; color: var(--paper); font: inherit; font-size: 13px; cursor: pointer; }
+    .comparar-op:hover { border-color: var(--paper); }
+    .enviar { width: 100%; margin-top: 22px; min-height: 52px; font-size: 14px; }
+    .enviado { margin-top: 14px; padding: 12px 14px; background: #e3ebdf; color: #344b34; font-size: 13px; }
+    @media (max-width: 860px) {
+      .encargo-layout { grid-template-columns: 1fr; padding-top: 36px; }
+      .presupuesto { position: static; }
+      .campos { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="announcement">Cerámica creativa hecha a mano en La Habana <span aria-hidden="true">✳</span></div>
+  <header class="site-header"><nav class="nav" aria-label="Arca Ceramics"><span class="brand"><strong>arca</strong><span>CERAMICS</span></span></nav></header>
+  <main>
+    <section class="page-hero"><div class="wrap"><div class="eyebrow">Prototipo para Rocío · precios de prueba</div><h1>Diseña tu pieza y mira cuánto costaría</h1><p>Elige qué quieres, el tamaño y los detalles. Verás un precio aproximado al momento y, si te encaja, se lo envías a Arca por WhatsApp. Aquí no se paga nada.</p></div></section>
+
+    <div class="wrap encargo-layout">
+      <form id="encargo" novalidate>
+        <fieldset class="paso"><legend><b>01</b>¿Qué pieza quieres?</legend><div class="chips" id="tipos"></div></fieldset>
+
+        <fieldset class="paso"><legend><b>02</b>¿De qué tamaño?</legend><small>La medida más larga de la pieza (alto o ancho).</small>
+          <div class="tamano-fila"><input type="range" id="tamano" name="tamano" min="5" max="30" step="1" value="15" aria-label="Tamaño en centímetros"><output id="tamano-valor" for="tamano">15 cm</output></div>
+        </fieldset>
+
+        <fieldset class="paso"><legend><b>03</b>Colores y detalles</legend>
+          <div class="chips" id="colores"></div>
+          <div style="margin-top:12px">
+            <label class="check"><input type="checkbox" name="parecido"><span id="lbl-parecido"></span></label>
+            <label class="check"><input type="checkbox" name="texto"><span id="lbl-texto"></span></label>
+            <label class="check"><input type="checkbox" name="urgente"><span id="lbl-urgente"></span></label>
+          </div>
+        </fieldset>
+
+        <fieldset class="paso"><legend><b>04</b>Cuéntanos tu idea</legend>
+          <div class="campos">
+            <div class="field full"><label for="detalles">Tu idea</label><textarea id="detalles" name="detalles" placeholder="Ej. un perrito como el mío, marrón con una mancha blanca en el ojo, sentado"></textarea></div>
+            <div class="field"><label for="cantidad">Cantidad</label><input id="cantidad" name="cantidad" type="number" min="1" value="1" inputmode="numeric"></div>
+            <div class="field"><label for="fecha">¿Para cuándo?</label><input id="fecha" name="fecha" placeholder="Ej. 20 de diciembre"></div>
+          </div>
+          <small style="margin-top:12px">¿Tienes fotos de referencia? Las mandas por WhatsApp justo después de enviar el encargo.</small>
+        </fieldset>
+
+        <fieldset class="paso"><legend><b>05</b>Tus datos y la entrega</legend>
+          <div class="campos">
+            <div class="field"><label for="nombre">Tu nombre</label><input id="nombre" name="nombre" autocomplete="name" required></div>
+            <div class="field"><label for="entrega">Entrega</label><select id="entrega" name="entrega"><option>Recogida en el taller</option><option>Entrega a domicilio</option><option>Aún no lo sé</option></select></div>
+            <div class="field full"><label for="zona">Municipio o zona (si es a domicilio)</label><input id="zona" name="zona" placeholder="Ej. Plaza, Vedado"></div>
+          </div>
+        </fieldset>
+      </form>
+
+      <aside class="presupuesto" aria-live="polite">
+        <div class="eyebrow">Precio aproximado</div>
+        <div class="cifra" id="precio">—</div>
+        <p id="precio-detalle"></p>
+        <div class="comparar-titulo">Prueba otros tamaños</div>
+        <div id="comparar"></div>
+        <button class="button enviar" type="submit" form="encargo">Enviar encargo por WhatsApp <span aria-hidden="true">↗</span></button>
+        <p class="enviado" id="enviado" hidden>Se ha abierto WhatsApp con tu encargo. Envía el mensaje y, si tienes fotos de referencia, mándalas en el mismo chat.</p>
+        <p class="aviso">Es un precio orientativo. Rocío lo confirma al ver tu idea: puede variar según la forma, el detalle y el material. No se cobra nada desde la web.</p>
+      </aside>
+    </div>
+  </main>
+  <footer class="footer"><div class="wrap"><div class="footer-bottom"><span>© Arca Ceramics · Prototipo con precios de prueba</span><span>La Habana, Cuba</span></div></div></footer>
+  <script src="precios.js" defer></script><script src="encargar.js" defer></script><script src="site.js" defer></script>
+</body>
+</html>
