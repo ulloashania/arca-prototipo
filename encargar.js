@@ -17,22 +17,13 @@
     `<label class="chip"><input type="radio" name="colores" value="${c.id}"${i === 0 ? ' checked' : ''}><span>${c.nombre}</span></label>`).join('');
   $('lbl-parecido').textContent = P.extras.parecido.nombre;
   $('lbl-texto').textContent = P.extras.texto.nombre;
-  $('lbl-urgente').textContent = P.extras.urgente.nombre;
 
   const tipoActual = () => P.tipos.find(t => t.id === form.tipo.value) || P.tipos[0];
 
-  // Precio base de un tipo a un tamaño, repartiendo entre los puntos 10/20/30 cm
+  // Precio base de un tipo a un tamaño: "de tanto a tanto", repartido según el tamaño
   function precioBase(tipo, cm) {
-    const puntos = Object.keys(tipo.precios).map(Number).sort((a, b) => a - b);
-    if (cm <= puntos[0]) return tipo.precios[puntos[0]] * (cm / puntos[0]) ** 0.5;
-    for (let i = 1; i < puntos.length; i++) {
-      if (cm <= puntos[i]) {
-        const a = puntos[i - 1], b = puntos[i];
-        return tipo.precios[a] + (tipo.precios[b] - tipo.precios[a]) * (cm - a) / (b - a);
-      }
-    }
-    const a = puntos[puntos.length - 2], b = puntos[puntos.length - 1];
-    return tipo.precios[b] + (tipo.precios[b] - tipo.precios[a]) * (cm - b) / (b - a);
+    const t = Math.min(1, Math.max(0, (cm - tipo.min) / (tipo.max - tipo.min)));
+    return tipo.desde + (tipo.hasta - tipo.desde) * t;
   }
 
   function calcular(cm) {
@@ -40,7 +31,6 @@
     const color = P.extras.colores.find(c => c.id === form.colores.value) || P.extras.colores[0];
     let porcentaje = color.porcentaje;
     if (form.parecido.checked) porcentaje += P.extras.parecido.porcentaje;
-    if (form.urgente.checked) porcentaje += P.extras.urgente.porcentaje;
     let pieza = precioBase(tipo, cm) * (1 + porcentaje / 100);
     if (form.texto.checked) pieza += P.extras.texto.fijo;
     const cantidad = Math.max(1, parseInt(form.cantidad.value, 10) || 1);
@@ -80,7 +70,7 @@
     if (!form.reportValidity()) return;
     const tipo = tipoActual();
     const color = P.extras.colores.find(c => c.id === form.colores.value);
-    const extras = [form.parecido.checked && P.extras.parecido.nombre, form.texto.checked && P.extras.texto.nombre, form.urgente.checked && 'Urgente'].filter(Boolean);
+    const extras = [form.parecido.checked && P.extras.parecido.nombre, form.texto.checked && P.extras.texto.nombre].filter(Boolean);
     const lineas = [
       'Hola Arca, quiero hacer un encargo:',
       `• Pieza: ${tipo.nombre}`,
@@ -89,7 +79,6 @@
       `• Colores: ${color.nombre}`,
       extras.length ? `• Extras: ${extras.join(', ')}` : '',
       form.detalles.value.trim() ? `• Mi idea: ${form.detalles.value.trim()}` : '',
-      form.fecha.value.trim() ? `• Para cuándo: ${form.fecha.value.trim()}` : '',
       `• Entrega: ${form.entrega.value}${form.zona.value.trim() ? ' (' + form.zona.value.trim() + ')' : ''}`,
       `• Precio aproximado de la web: ${$('precio').textContent}`,
       `• Me llamo ${form.nombre.value.trim()}`,
