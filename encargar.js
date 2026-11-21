@@ -29,13 +29,16 @@
   function calcular(cm) {
     const tipo = tipoActual();
     const color = P.extras.colores.find(c => c.id === form.colores.value) || P.extras.colores[0];
-    let porcentaje = color.porcentaje;
-    if (form.parecido.checked) porcentaje += P.extras.parecido.porcentaje;
-    let pieza = precioBase(tipo, cm) * (1 + porcentaje / 100);
-    if (form.texto.checked) pieza += P.extras.texto.fijo;
+    // Extras en USD por pieza ("de tanto a tanto"); los que no tienen precio no suman
+    const elegidos = [color, form.parecido.checked && P.extras.parecido, form.texto.checked && P.extras.texto].filter(Boolean);
+    const extraMin = elegidos.reduce((s, x) => s + (x.extra ? x.extra[0] : 0), 0);
+    const extraMax = elegidos.reduce((s, x) => s + (x.extra ? x.extra[1] : 0), 0);
+    const base = precioBase(tipo, cm);
     const cantidad = Math.max(1, parseInt(form.cantidad.value, 10) || 1);
-    const total = pieza * cantidad;
-    return { min: redondear(total * (1 - P.margen)), max: redondear(total * (1 + P.margen)) };
+    return {
+      min: redondear((base * (1 - P.margen) + extraMin) * cantidad),
+      max: redondear((base * (1 + P.margen) + extraMax) * cantidad)
+    };
   }
   const redondear = n => Math.max(1, Math.round(n));
   const rango = r => r.min === r.max ? `${r.min} ${P.moneda}` : `${r.min}–${r.max} ${P.moneda}`;
