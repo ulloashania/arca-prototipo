@@ -5,7 +5,7 @@
   <title>Encarga tu pieza | Arca Ceramics</title><meta name="robots" content="noindex"><meta name="description" content="Diseña tu pieza de cerámica por encargo, mira un precio aproximado y envía el pedido a Arca por WhatsApp.">
   <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="styles.css">
   <style>
-    .encargo-layout { display: grid; grid-template-columns: 1.3fr .9fr; gap: clamp(28px, 5vw, 64px); align-items: start; padding: 56px 0 90px; }
+    .encargo-layout { display: grid; grid-template-columns: 1.3fr .9fr; gap: clamp(28px, 5vw, 64px); align-items: start; padding: 40px 0 90px; }
     .paso { border: 0; margin: 0 0 30px; padding: 0; }
     .paso legend { margin-bottom: 12px; font-family: var(--serif); font-size: 22px; }
     .paso legend b { color: var(--clay); font-family: var(--sans); font-size: 12px; margin-right: 8px; }
@@ -31,6 +31,19 @@
     .comparar-op:hover { border-color: var(--paper); }
     .enviar { width: 100%; margin-top: 22px; min-height: 52px; font-size: 14px; }
     .enviado { margin-top: 14px; padding: 12px 14px; background: #e3ebdf; color: #344b34; font-size: 13px; }
+    /* Cabecera más baja en esta página, para que la calculadora se vea antes */
+    .page-hero { padding: 36px 0 30px; }
+    .page-hero h1 { margin: 10px 0 10px; font-size: clamp(32px, 4.5vw, 48px); }
+    /* Tipos de pieza en 2 líneas: 3 arriba y 2 abajo */
+    #tipos { display: grid; grid-template-columns: repeat(6, 1fr); grid-auto-flow: dense; }
+    #tipos .chip:nth-child(-n+3) { grid-column: span 2; }
+    #tipos .chip:nth-child(n+4) { grid-column: span 3; }
+    #tipos .chip span { width: 100%; height: 100%; justify-content: center; padding: 8px 14px; line-height: 1.3; text-align: center; }
+    @media (max-width: 600px) {
+      #tipos { grid-template-columns: 1fr 1fr; }
+      #tipos .chip:nth-child(n) { grid-column: auto; }
+      #tipos .chip:nth-child(4) { grid-column: span 2; }
+    }
     .condiciones { max-width: 760px; padding-bottom: 90px; }
     .condiciones h2 { margin: 0 0 10px; font-family: var(--serif); font-size: clamp(28px, 4vw, 36px); }
     .condiciones > p { color: var(--muted); }

@@ -9,8 +9,8 @@ window.ARCA_PRECIOS = {
   tipos: [
     { id: 'adorno',     nombre: 'Figura, adorno u otra idea',                                    min: 8,  max: 30, desde: 8,  hasta: 20 },
     { id: 'mascota',    nombre: 'Figura de tu mascota',                                          min: 10, max: 20, desde: 10, hasta: 20 },
-    { id: 'accesorios', nombre: 'Porta accesorios, joyero, porta incienso, porta velas o cenicero', min: 8,  max: 30, desde: 7,  hasta: 15 },
     { id: 'maceta',     nombre: 'Organizador o maceta',                                          min: 8,  max: 30, desde: 8,  hasta: 20 },
+    { id: 'accesorios', nombre: 'Porta accesorios, joyero, porta incienso, porta velas o cenicero', min: 8,  max: 30, desde: 7,  hasta: 15 },
     { id: 'fotos',      nombre: 'Porta fotos',                                                   min: 5,  max: 10, desde: 3,  hasta: 5 }
   ],
   // Lo que sube el precio, en USD por pieza: "extra: [de, a]".
