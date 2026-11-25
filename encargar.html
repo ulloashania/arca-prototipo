@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#f5efe5">
+  <title>Encarga tu pieza | Arca Ceramics</title><meta name="description" content="Diseña tu pieza de cerámica por encargo, mira un precio aproximado y envía el pedido a Arca por WhatsApp."><link rel="preload" href="public/fonts/dm-sans-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="public/fonts/playfair-display-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="styles.css">
+  <style>
+    .encargo-layout { display: grid; grid-template-columns: 1.3fr .9fr; gap: clamp(28px, 5vw, 64px); align-items: start; padding: 40px 0 90px; }
+    .paso { border: 0; margin: 0 0 30px; padding: 0; }
+    .paso legend { margin-bottom: 12px; font-family: var(--serif); font-size: 22px; }
+    .paso legend b { color: var(--clay); font-family: var(--sans); font-size: 12px; margin-right: 8px; }
+    .paso small { display: block; margin: -6px 0 12px; color: var(--muted); font-size: 12px; }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .chip input { position: absolute; opacity: 0; }
+    .chip span { display: inline-flex; align-items: center; min-height: 44px; padding: 0 16px; border: 1px solid var(--line); border-radius: 999px; background: var(--white); font-size: 13px; cursor: pointer; }
+    .chip input:checked + span { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+    .chip input:focus-visible + span { outline: 2px solid var(--clay); outline-offset: 2px; }
+    .tamano-fila { display: flex; align-items: center; gap: 16px; }
+    .tamano-fila input { flex: 1; accent-color: var(--clay); min-height: 44px; }
+    .tamano-fila output { min-width: 64px; font-family: var(--serif); font-size: 24px; text-align: right; }
+    .check { display: flex; gap: 10px; align-items: flex-start; padding: 10px 0; font-size: 14px; cursor: pointer; }
+    .check input { width: 20px; height: 20px; margin: 0; accent-color: var(--clay); flex: none; }
+    .campos { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+    .presupuesto { position: sticky; top: 90px; padding: 28px; background: var(--ink); color: var(--paper); }
+    .presupuesto .eyebrow { color: #e9b9a6; }
+    .presupuesto .cifra { margin: 10px 0 4px; font-family: var(--serif); font-size: clamp(40px, 6vw, 56px); line-height: 1; }
+    .presupuesto p { margin: 0; color: rgba(245,239,229,.75); font-size: 13px; }
+    .presupuesto .aviso { margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,.18); font-size: 12px; }
+    .comparar-titulo { margin: 22px 0 8px; font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+    .comparar-op { display: flex; justify-content: space-between; width: 100%; min-height: 44px; padding: 0 14px; margin-bottom: 6px; border: 1px solid rgba(255,255,255,.2); background: transparent; color: var(--paper); font: inherit; font-size: 13px; cursor: pointer; }
+    .comparar-op:hover { border-color: var(--paper); }
+    .enviar { width: 100%; margin-top: 22px; min-height: 52px; font-size: 14px; }
+    .enviado { margin-top: 14px; padding: 12px 14px; background: #e3ebdf; color: #344b34; font-size: 13px; }
+    /* Cabecera más baja en esta página, para que la calculadora se vea antes */
+    .page-hero { padding: 36px 0 30px; }
+    .page-hero h1 { margin: 10px 0 10px; font-size: clamp(32px, 4.5vw, 48px); }
+    /* Tipos de pieza en 2 líneas: los 3 primeros arriba y los otros 2 abajo, con su tamaño normal */
+    #tipos::after { content: ""; flex-basis: 100%; order: 1; margin-top: -8px; }
+    #tipos .chip:nth-child(n+4) { order: 2; }
+    #encargo, #condiciones { scroll-margin-top: 100px; }
+    .condiciones { max-width: 760px; padding-bottom: 90px; }
+    .condiciones h2 { margin: 0 0 10px; font-family: var(--serif); font-size: clamp(28px, 4vw, 36px); }
+    .condiciones > p { color: var(--muted); }
+    .condiciones details { margin-top: 14px; border-top: 1px solid var(--line); }
+    .condiciones summary { min-height: 48px; display: flex; align-items: center; font-weight: 600; cursor: pointer; }
+    .condiciones li { margin-bottom: 8px; font-size: 14px; }
+    .condiciones .gracias { margin-top: 24px; font-family: var(--serif); font-style: italic; }
+    @media (max-width: 860px) {
+      .encargo-layout { grid-template-columns: 1fr; padding-top: 36px; }
+      .presupuesto { position: static; }
+      .campos { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="announcement">Cerámica creativa hecha a mano en La Habana <i class="sep" aria-hidden="true"></i></div>
+  <header class="site-header"><nav class="nav" aria-label="Navegación principal"><a class="brand" href="index.html" aria-label="Arca Ceramics, inicio"><strong>arca</strong><span>CERAMICS</span></a><div class="nav-links" id="nav-links"><a href="piezas.html">Piezas</a><a href="talleres.html">Talleres</a><a href="nosotros.html">Nosotros</a><a class="mobile-only" href="https://wa.me/5354638470?text=Hola%20Arca%2C%20tengo%20una%20pregunta" target="_blank" rel="noreferrer">Contáctanos</a></div><div class="nav-actions"><a class="button secondary contactar" href="https://wa.me/5354638470?text=Hola%20Arca%2C%20tengo%20una%20pregunta" target="_blank" rel="noreferrer">Contáctanos</a><a class="button" href="encargar.html" aria-current="page">Encargar <span aria-hidden="true">↗︎</span></a></div><button class="menu-toggle" id="menu-toggle" aria-label="Abrir menú" aria-expanded="false">☰</button></nav></header>
+  <main>
+    <section class="page-hero"><div class="wrap"><div class="eyebrow">Por encargo</div><h1>Diseña tu pieza y mira cuánto costaría</h1><p>Elige qué quieres, el tamaño y los detalles. Verás un precio aproximado al momento y, si te encaja, se lo envías a Arca por WhatsApp. Aquí no se paga nada.</p><p><a class="text-link" href="piezas.html">¿Buscas una idea? Mira piezas que ya hemos hecho →</a></p></div></section>
+
+    <div class="wrap encargo-layout">
+      <form id="encargo" novalidate>
+        <fieldset class="paso"><legend><b>01</b>¿Qué pieza quieres?</legend><div class="chips" id="tipos"></div></fieldset>
+
+        <fieldset class="paso"><legend><b>02</b>¿De qué tamaño?</legend><small>La medida más larga de la pieza (alto o ancho). Mídelo con una regla o cinta métrica para saber bien el tamaño que quieres.</small>
+          <div class="tamano-fila"><input type="range" id="tamano" name="tamano" min="5" max="30" step="1" value="15" aria-label="Tamaño en centímetros"><output id="tamano-valor" for="tamano">15 cm</output></div>
+        </fieldset>
+
+        <fieldset class="paso"><legend><b>03</b>Colores y detalles</legend>
+          <div class="chips" id="colores"></div>
+          <div style="margin-top:12px">
+            <label class="check"><input type="checkbox" name="parecido"><span id="lbl-parecido"></span></label>
+            <label class="check"><input type="checkbox" name="texto"><span id="lbl-texto"></span></label>
+          </div>
+        </fieldset>
+
+        <fieldset class="paso"><legend><b>04</b>Cuéntanos tu idea</legend>
+          <div class="campos">
+            <div class="field full"><label for="detalles">Tu idea</label><textarea id="detalles" name="detalles" placeholder="Ej. un perrito como el mío, marrón con una mancha blanca en el ojo, sentado"></textarea></div>
+            <div class="field"><label for="cantidad">Cantidad</label><input id="cantidad" name="cantidad" type="number" min="1" value="1" inputmode="numeric"></div>
+          </div>
+          <small style="margin-top:12px">¿Tienes una foto de inspiración? La mandas por WhatsApp justo después de enviar el encargo. Si no tienes, cuéntanos aquí exactamente cómo la quieres.</small>
+        </fieldset>
+
+        <fieldset class="paso"><legend><b>05</b>Tus datos y la entrega</legend>
+          <div class="campos">
+            <div class="field"><label for="nombre">Tu nombre</label><input id="nombre" name="nombre" autocomplete="name" required></div>
+            <div class="field"><label for="entrega">Entrega</label><select id="entrega" name="entrega"><option>Recogida en el taller</option><option>Entrega a domicilio</option><option>Aún no lo sé</option></select></div>
+            <div class="field full"><label for="zona">Municipio o zona (si es a domicilio)</label><input id="zona" name="zona" placeholder="Ej. Plaza, Vedado"></div>
+          </div>
+        </fieldset>
+      </form>
+
+      <aside class="presupuesto" aria-live="polite">
+        <div class="eyebrow">Precio aproximado</div>
+        <div class="cifra" id="precio">—</div>
+        <p id="precio-detalle"></p>
+        <div class="comparar-titulo">Prueba otros tamaños</div>
+        <div id="comparar"></div>
+        <button class="button enviar" type="submit" form="encargo">Enviar encargo por WhatsApp <span aria-hidden="true">↗︎</span></button>
+        <p class="enviado" id="enviado" hidden>Se ha abierto WhatsApp con tu encargo. Envía el mensaje y, si tienes fotos de referencia, mándalas en el mismo chat.</p>
+        <p class="aviso"><b>Sin fecha de entrega fija.</b> Por los cortes de electricidad, el horno tiene pocas horas de luz y ahora no aceptamos encargos para una fecha concreta. Te iremos avisando de cómo va tu pieza.</p>
+        <p class="aviso"><b>50 % por adelantado.</b> Cuando aceptes la cotización, se paga la mitad para reservar el material y el tiempo en el taller (no se devuelve). Al enviar el encargo, aceptas <a href="#condiciones" style="color:inherit">nuestras condiciones</a>.</p>
+        <p class="aviso">Es un precio orientativo. Te lo confirmamos al ver tu idea: puede variar según la forma, el detalle y el material. Precios en USD. No se cobra nada desde la web.</p>
+      </aside>
+    </div>
+
+    <section class="wrap condiciones" id="condiciones">
+      <h2>Antes de encargar</h2>
+      <p>Cada pieza es única y hecha completamente a mano. Para cotizarla necesitamos las medidas (para calcular el material) y una foto de inspiración, o que nos expliques exactamente cómo la quieres.</p>
+      <details open><summary>Condiciones del encargo</summary><ul>
+        <li>Respondemos mensajes a cualquier hora del día. Como estamos en el taller o con otras responsabilidades, a veces tardamos un poco, pero siempre contestamos lo antes posible.</li>
+        <li>Se paga el 50 % por adelantado. Asegura la reserva de materiales y el tiempo en el taller, por eso no es reembolsable.</li>
+        <li>Si el primer pago fue por transferencia, el pago final se hace en efectivo al entregar o recoger la pieza.</li>
+        <li>Una vez empezado el pedido no se aceptan cambios en el diseño, el color ni las medidas acordadas.</li>
+        <li>Al ser piezas hechas a mano, cada una es única y puede tener ligeras variaciones en detalles o acabado: es parte de su esencia artesanal.</li>
+        <li>Las piezas no están hechas para soportar golpes, caídas ni temperaturas extremas. Para limpiarlas, basta un paño seco.</li>
+        <li>Revisa tu pedido al recibirlo para confirmar que está en buen estado. Una vez entregado, cualquier daño posterior es responsabilidad del cliente.</li>
+        <li>Si llega en mal estado por culpa de la mensajería, avisa enseguida al mensajero y a nosotros. Si se confirma que el daño fue en el transporte, hacemos la pieza de nuevo y te la enviamos sin coste.</li>
+        <li>Cuando te avisemos de que tu pedido está listo, tienes 15 días para recogerlo o pedir el envío.</li>
+      </ul></details>
+      <details><summary>Entregas a domicilio</summary><ul>
+        <li>Necesitamos la dirección exacta (con número de vivienda) y el nombre y teléfono de quien recibe.</li>
+        <li>Cuando el mensajero confirme la entrega y nos digas que puedes recibir, mantente disponible. Si al llegar no se puede entregar porque nadie responde, la segunda mensajería corre por tu cuenta.</li>
+        <li>La entrega tiene 10 minutos de cortesía; después se suman 50 CUP por cada minuto de espera.</li>
+        <li>El horario no es exacto. Puedes indicarnos un rango de horas que te venga bien, teniendo en cuenta que el mensajero hace varias entregas.</li>
+      </ul></details>
+      <p class="gracias">Gracias por confiar en nuestro trabajo artesanal. Cada pieza está hecha a mano con dedicación y cariño.</p>
+    </section>
+  </main>
+  <footer class="footer">
+    <div class="wrap">
+      <div class="footer-top">
+        <div><a class="brand" href="index.html"><strong>arca</strong><span>CERAMICS</span></a><p>Cerámica creativa hecha a mano en La Habana.</p></div>
+        <div class="footer-links"><a href="piezas.html">Piezas</a><a href="encargar.html">Encargar</a><a href="talleres.html">Talleres</a><a href="nosotros.html">Nosotros</a><a href="https://wa.me/5354638470?text=Hola%20Arca%2C%20tengo%20una%20pregunta" target="_blank" rel="noreferrer">Contáctanos</a></div>
+      </div>
+      <div class="footer-bottom"><span>© Arca Ceramics · Borrador de diseño</span><span>La Habana, Cuba</span></div>
+    </div>
+  </footer>
+  <script src="precios.js" defer></script><script src="encargar.js" defer></script><script src="site.js" defer></script>
+</body>
+</html>

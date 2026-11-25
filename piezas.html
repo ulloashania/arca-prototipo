@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#f5efe5">
+  <title>Piezas | Arca Ceramics</title><meta name="description" content="Piezas de cerámica hechas a mano por Arca en La Habana. Elige una que te inspire y encarga la tuya a medida."><link rel="preload" href="public/fonts/dm-sans-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="public/fonts/playfair-display-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="styles.css">
+  <style>
+    .page-hero { padding: 36px 0 30px; }
+    .page-hero h1 { margin: 10px 0 10px; font-size: clamp(32px, 4.5vw, 48px); }
+    .galeria { padding: 10px 0 90px; }
+  </style>
+</head>
+<body>
+  <div class="announcement">Cerámica creativa hecha a mano en La Habana <i class="sep" aria-hidden="true"></i></div>
+  <header class="site-header"><nav class="nav" aria-label="Navegación principal"><a class="brand" href="index.html" aria-label="Arca Ceramics, inicio"><strong>arca</strong><span>CERAMICS</span></a><div class="nav-links" id="nav-links"><a href="piezas.html" aria-current="page">Piezas</a><a href="talleres.html">Talleres</a><a href="nosotros.html">Nosotros</a><a class="mobile-only" href="https://wa.me/5354638470?text=Hola%20Arca%2C%20tengo%20una%20pregunta" target="_blank" rel="noreferrer">Contáctanos</a></div><div class="nav-actions"><a class="button secondary contactar" href="https://wa.me/5354638470?text=Hola%20Arca%2C%20tengo%20una%20pregunta" target="_blank" rel="noreferrer">Contáctanos</a><a class="button" href="encargar.html">Encargar <span aria-hidden="true">↗︎</span></a></div><button class="menu-toggle" id="menu-toggle" aria-label="Abrir menú" aria-expanded="false">☰</button></nav></header>
+  <main>
+    <section class="page-hero"><div class="wrap"><div class="eyebrow">Piezas para inspirarte</div><h1>¿Buscas una idea?</h1><p>Son trabajos que Rocío ya ha hecho en el taller. Todo es por encargo: elige la que te guste, toca «Encargar algo así» y te hacemos una a tu medida.</p></div></section>
+
+    <section class="wrap galeria">
+            <div class="reference-tools"><input class="catalog-search" id="catalog-search" type="search" placeholder="Buscar: jarrón, mascota, porta incienso…" aria-label="Buscar piezas"><span class="catalog-count" id="reference-count" aria-live="polite"></span></div>
+      <div class="reference-filters" role="group" aria-label="Filtrar por tipo de pieza"><button type="button" data-catalog-filter="all" data-label="Todas" aria-pressed="true">Todas</button><button type="button" data-catalog-filter="adorno" data-label="Figuras y adornos" aria-pressed="false">Figuras y adornos</button><button type="button" data-catalog-filter="mascota" data-label="Mascotas" aria-pressed="false">Mascotas</button><button type="button" data-catalog-filter="maceta" data-label="Organizadores y macetas" aria-pressed="false">Organizadores y macetas</button><button type="button" data-catalog-filter="accesorios" data-label="Porta accesorios, inciensos y velas" aria-pressed="false">Porta accesorios, inciensos y velas</button><button type="button" data-catalog-filter="fotos" data-label="Porta fotos" aria-pressed="false">Porta fotos</button></div>
+      <div class="reference-grid" id="reference-grid"></div><p class="catalog-empty" id="catalog-empty">Prueba con otro nombre o elige una categoría diferente.</p><div class="catalog-load"><button class="button secondary" id="catalog-more" type="button">Ver más piezas</button></div>
+    </section>
+
+  </main>
+  <footer class="footer">
+    <div class="wrap">
+      <div class="footer-top">
+        <div><a class="brand" href="index.html"><strong>arca</strong><span>CERAMICS</span></a><p>Cerámica creativa hecha a mano en La Habana.</p></div>
+        <div class="footer-links"><a href="piezas.html">Piezas</a><a href="encargar.html">Encargar</a><a href="talleres.html">Talleres</a><a href="nosotros.html">Nosotros</a><a href="https://wa.me/5354638470?text=Hola%20Arca%2C%20tengo%20una%20pregunta" target="_blank" rel="noreferrer">Contáctanos</a></div>
+      </div>
+      <div class="footer-bottom"><span>© Arca Ceramics · Borrador de diseño</span><span>La Habana, Cuba</span></div>
+    </div>
+  </footer>
+  <script src="catalogo-data.js" defer></script><script src="catalogo.js" defer></script><script src="site.js" defer></script>
+</body>
+</html>

@@ -48,7 +48,12 @@
     tamano.min = tipo.min; tamano.max = tipo.max;
     const cm = Number(tamano.value);
     tamanoValor.textContent = `${cm} cm`;
-    $('precio').textContent = rango(calcular(cm));
+    const precio = $('precio'), nuevo = rango(calcular(cm));
+    if (precio.textContent !== nuevo && precio.textContent.trim()) {
+      // Saltito para que se note que el precio ha cambiado (solo CSS, se apaga con «reducir movimiento»)
+      precio.classList.remove('salto'); void precio.offsetWidth; precio.classList.add('salto');
+    }
+    precio.textContent = nuevo;
     $('precio-detalle').textContent = `${tipo.nombre} · ${cm} cm · ${Math.max(1, parseInt(form.cantidad.value, 10) || 1)} ud.`;
     // Comparar con otros tamaños, para ver qué pasa si se hace más pequeña o más grande
     const otros = [...new Set([tipo.min, 10, 15, 20, 30, tipo.max])]
@@ -64,9 +69,25 @@
   form.addEventListener('input', actualizar);
   form.addEventListener('change', actualizar);
 
-  // Si viene de una pieza de referencia (?pieza=…), apuntarla en la descripción
+  // Si viene de una pieza de referencia, apuntarla en la idea y elegir el tipo que le toca
+  const TIPO_POR_NOMBRE = [
+    [/mascota/, 'mascota'], [/foto|marco/, 'fotos'],
+    [/jarr|maceta|florero|planta|organizador/, 'maceta'],
+    [/accesorio|joy|anillo|arete|incienso|vela|cenicero|bandeja|llaves|centro de mesa/, 'accesorios']
+  ];
+  function elegirPieza(nombre, tipo, ref) {
+    form.detalles.value = `Me inspira la pieza «${nombre}»${ref ? ` (ref. ${ref})` : ''}. `;
+    const n = nombre.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+    // Desde el catálogo llega su tipo; si no, se deduce del nombre
+    const id = P.tipos.some(t => t.id === tipo) ? tipo : (TIPO_POR_NOMBRE.find(([re]) => re.test(n)) || [, 'adorno'])[1];
+    const radio = form.querySelector(`input[name="tipo"][value="${id}"]`);
+    if (radio) radio.checked = true;
+    actualizar();
+  }
   const params = new URLSearchParams(location.search);
-  if (params.get('pieza')) form.detalles.value = `Me inspira la pieza «${params.get('pieza')}». `;
+  if (params.get('pieza')) elegirPieza(params.get('pieza'), params.get('tipo'), params.get('ref'));
+  // Enlace a la foto de la pieza del catálogo, para que Rocío la vea en el WhatsApp
+  const fotoPieza = /^public\/images\/[\w\/.-]+$/.test(params.get('foto') || '') ? new URL(params.get('foto'), location.href).href : '';
 
   form.addEventListener('submit', e => {
     e.preventDefault();
@@ -82,6 +103,7 @@
       `• Colores: ${color.nombre}`,
       extras.length ? `• Extras: ${extras.join(', ')}` : '',
       form.detalles.value.trim() ? `• Mi idea: ${form.detalles.value.trim()}` : '',
+      fotoPieza ? `• Foto de la pieza: ${fotoPieza}` : '',
       `• Entrega: ${form.entrega.value}${form.zona.value.trim() ? ' (' + form.zona.value.trim() + ')' : ''}`,
       `• Precio aproximado de la web: ${$('precio').textContent}`,
       `• Me llamo ${form.nombre.value.trim()}`,
